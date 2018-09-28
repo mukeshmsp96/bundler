@@ -282,6 +282,14 @@ module Bundler
       @config_root ||= SharedHelpers.config_root
     end
 
+    def config_path
+      if Bundler.feature_flag.config_relative_to_cwd?
+        current_config_path
+      else
+        app_config_path
+      end
+    end
+
     def current_config_path
       config_root.join(app_config)
     end
@@ -315,7 +323,7 @@ EOF
     end
 
     def settings
-      @settings ||= Settings.new(current_config_path)
+      @settings ||= Settings.new(config_path)
     end
 
     # @return [Hash] Environment present before Bundler was activated
