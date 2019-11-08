@@ -14,6 +14,7 @@ branches:
     - trying
     - /.+-dev$/
     - /.+-stable$/
+    - bump_rake
 
 cache:
   directories:
