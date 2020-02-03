@@ -41,8 +41,11 @@ module ParallelTests
     end
 
     def pid_file_path
-      puts "PARALLEL_PID_FILE being fetched"
-      puts "PARALLEL_PID_FILE being fetched but not available" if ENV["PARALLEL_PID_FILE"].nil?
+      if ENV["PARALLEL_PID_FILE"].nil?
+        puts "PARALLEL_PID_FILE being fetched but not available from #{caller_locations.join("\n")}"
+      else
+        puts "PARALLEL_PID_FILE being fetched from #{caller_locations.join("\n")}"
+      end
       ENV.fetch('PARALLEL_PID_FILE')
     end
 
