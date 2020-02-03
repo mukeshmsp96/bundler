@@ -80,6 +80,7 @@ module ParallelTests
 
           puts cmd if report_process_command?(options) && !options[:serialize_stdout]
 
+          puts "Executing #{cmd} with env #{env}"
           execute_command_and_capture_output(env, cmd, options)
         end
 
