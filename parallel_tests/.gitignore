@@ -1,0 +1,4 @@
+*.sh
+tmp
+.bundle
+**/vendor/bundle
