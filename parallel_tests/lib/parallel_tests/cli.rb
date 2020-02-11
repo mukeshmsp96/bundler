@@ -114,6 +114,8 @@ module ParallelTests
     end
 
     def report_results(test_results, options)
+      return if test_results.nil?
+
       results = @runner.find_results(test_results.map { |result| result[:stdout] }*"")
       puts ""
       puts @runner.summarize_results(results)
@@ -146,6 +148,8 @@ module ParallelTests
 
     #exit with correct status code so rake parallel:test && echo 123 works
     def any_test_failed?(test_results)
+      return true if test_results.nil?
+
       test_results.any? { |result| result[:exit_status] != 0 }
     end
 
