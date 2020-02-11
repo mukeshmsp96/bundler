@@ -67,6 +67,9 @@ module ParallelTests
         puts "PARALLEL_PID_FILE being fetched from #{caller_locations.join("\n")}"
       end
       ENV.fetch('PARALLEL_PID_FILE')
+    rescue => e
+      puts e.message
+      raise
     end
 
     def stop_all_processes

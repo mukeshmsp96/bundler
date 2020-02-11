@@ -336,8 +336,8 @@ module Parallel
             call_with_index(item, index, options, &block)
           end
         end
-      rescue
-        exception = $!
+      rescue => e
+        exception = e
       end
       handle_exception(exception, results)
     ensure
@@ -360,8 +360,9 @@ module Parallel
               call_with_index(item, index, options, &block)
             end
             results_mutex.synchronize { results[index] = result }
-          rescue
-            exception = $!
+          rescue => e
+            puts "[#{e.class}] #{e.message}"
+            exception = e
           end
         end
       end
@@ -471,9 +472,10 @@ module Parallel
           call_with_index(item, index, options, &block)
         # https://github.com/rspec/rspec-support/blob/673133cdd13b17077b3d88ece8d7380821f8d7dc/lib/rspec/support.rb#L132-L140
         rescue NoMemoryError, SignalException, Interrupt, SystemExit
-          raise $!
-        rescue Exception
-          ExceptionWrapper.new($!)
+          raise
+        rescue Exception => e
+          puts "Wrapping [#{e.class}] #{e.message}"
+          ExceptionWrapper.new(e)
         end
         begin
           Marshal.dump(result, write)
