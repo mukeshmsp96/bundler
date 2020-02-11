@@ -29,5 +29,5 @@ jobs:
         shell: bash
 
       - name: Run specs
-        run: bin/parallel_rspec --quiet spec
+        run: bin/parallel_rspec --quiet spec/bundler
         shell: bash
