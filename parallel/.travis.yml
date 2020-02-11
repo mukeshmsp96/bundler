@@ -1,0 +1,19 @@
+language: ruby
+dist: precise
+branches:
+  only: master
+rvm:
+  - 2.2
+  - 2.3
+  - 2.4
+  - 2.5
+  - 2.6
+
+matrix:
+  include:
+    - rvm: 2.6
+      env: RUBYOPT="--jit"
+  allow_failures:
+    - env: RUBYOPT="--jit"
+
+before_install: ruby -e "File.write('Gemfile.lock', File.read('Gemfile.lock').split('BUNDLED WITH').first)"

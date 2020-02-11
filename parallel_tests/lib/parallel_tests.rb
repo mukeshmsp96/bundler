@@ -25,14 +25,31 @@ module ParallelTests
         begin
           puts "PARALLEL_PID_FILE being set to #{f.path} from #{caller_locations.join("\n")}"
           ENV['PARALLEL_PID_FILE'] = f.path
+          $parallel_pid_file_reset = false
           TracePoint.trace(:line) do |tp|
-            raise "Reset at #{tp.path}:#{tp.lineno}" if ENV["PARALLEL_PID_FILE"].nil?
+            if !$parallel_pid_file_reset && ENV["PARALLEL_PID_FILE"].nil?
+              $parallel_pid_file_reset = true
+              threads = Thread.list
+
+              puts
+              puts "=" * 80
+              puts "Received USR1 signal; printing all #{threads.count} thread backtraces."
+
+              threads.each do |thr|
+                description = thr == Thread.main ? "Main thread" : thr.inspect
+                puts
+                puts "#{description} backtrace: "
+                puts thr.backtrace.join("\n")
+              end
+
+              puts "=" * 80
+            end
           end
           # Pids object should be created before threads will start adding pids to it
           # Otherwise we would have to use Mutex to prevent creation of several instances
           @pids = pids
           yield
-          raise "PARALLEL_PID_FILE being restored from #{caller_locations.join("\n")}"
+          puts "PARALLEL_PID_FILE being restored from #{caller_locations.join("\n")}"
           ENV['PARALLEL_PID_FILE'] = nil
           @pids = nil
         end
